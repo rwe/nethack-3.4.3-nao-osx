@@ -359,7 +359,7 @@ extcmd_via_menu()	/* here after # - now show pick-list of possible commands */
     anything any;
     const struct ext_func_tab *choices[MAX_EXT_CMD];
     char buf[BUFSZ];
-    char cbuf[QBUFSZ], prompt[QBUFSZ], fmtstr[20];
+    char cbuf[QBUFSZ], prompt[8 * QBUFSZ], fmtstr[20];
     int i, n, nchoices, acount;
     int ret,  biggest;
     int accelerator, prevaccelerator;
