@@ -14,6 +14,7 @@ typedef struct nhmi
 {
     winid wid;  /* NetHack window id */
     anything identifier; /* Value returned if item selected */
+    int glyph;           /* glyph display in menu */
     CHAR_P accelerator;  /* Character used to select item from menu */
     CHAR_P group_accel; /* Group accelerator for menu item, if any */
     int attr;  /* Text attributes for item */
@@ -543,7 +544,7 @@ void curses_create_nhmenu(winid wid)
 
 /* Add a menu item to the given menu window */
 
-void curses_add_nhmenu_item(winid wid, const ANY_P *identifier,
+void curses_add_nhmenu_item(winid wid, int glyph, const ANY_P *identifier,
  CHAR_P accelerator, CHAR_P group_accel, int attr, const char *str,
  BOOLEAN_P presel)
 {
@@ -562,6 +563,7 @@ void curses_add_nhmenu_item(winid wid, const ANY_P *identifier,
     new_item->wid = wid;
     new_item->identifier = *identifier;
     new_item->accelerator = accelerator;
+    new_item->glyph = glyph;
     new_item->group_accel = group_accel;
     new_item->attr = attr;
     new_item->str = new_str;
