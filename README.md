@@ -32,7 +32,7 @@ Manual installation
 3. Setup (no autoconf here!)
 
     ```
-    % sh sys/unux/setup.sh l
+    % sh sys/unix/setup.sh l
     ```
 
 4. Build
