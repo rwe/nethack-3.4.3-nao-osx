@@ -1112,6 +1112,35 @@ static void menu_display_page(nhmenu *menu, WINDOW *win, int page_num)
             }
             start_col++;
         }
+
+        if (menu_item_ptr->glyph != NO_GLYPH && iflags.use_menu_glyphs)
+        {
+          glyph_t glyph_char = ' ';
+          int glyph_color = NO_COLOR;
+          unsigned int special = 0;
+          mapglyph(menu_item_ptr->glyph, &glyph_char, &glyph_color, &special, 0, 0);
+          if (iflags.cursesgraphics)
+          {
+              glyph_char = curses_convert_glyph(glyph_char, menu_item_ptr->glyph);
+          }
+          // Pad one space before the glyph.
+          if (color != NO_COLOR)
+          {
+            curses_toggle_color_attr(win, glyph_color, menu_item_ptr->attr, ON);
+          }
+          mvwaddch(win, menu_item_ptr->line_num + 1, start_col++, glyph_char);
+          if (color != NO_COLOR)
+          {
+            curses_toggle_color_attr(win, glyph_color, menu_item_ptr->attr, OFF);
+          }
+          // Pad one space after the "% " glyph.
+          start_col++;
+          curses_toggle_color_attr(win, CLR_GRAY, NONE, ON);
+          mvwaddch(win, menu_item_ptr->line_num + 1, start_col++, '-');
+          curses_toggle_color_attr(win, CLR_GRAY, NONE, OFF);
+          start_col++;
+        }
+
 #ifdef MENU_COLOR
 		if (iflags.use_menu_color && (menu_color = get_menu_coloring
 		 ((char *)menu_item_ptr->str, &color, &attr)))
