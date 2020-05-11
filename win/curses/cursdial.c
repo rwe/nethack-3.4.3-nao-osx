@@ -1063,6 +1063,7 @@ static void menu_display_page(nhmenu *menu, WINDOW *win, int page_num)
     
     while (menu_item_ptr != NULL)
     {
+        start_col = 1;
         if (menu_item_ptr->page_num != page_num)
         {
             break;
@@ -1094,18 +1095,20 @@ static void menu_display_page(nhmenu *menu, WINDOW *win, int page_num)
             if (menu_item_ptr->selected)
             {
                 curses_toggle_color_attr(win, HIGHLIGHT_COLOR, A_REVERSE, ON);
-                mvwaddch(win, menu_item_ptr->line_num + 1, 1, '<');
-                mvwaddch(win, menu_item_ptr->line_num + 1, 2, curletter);
-                mvwaddch(win, menu_item_ptr->line_num + 1, 3, '>');
+                mvwaddch(win, menu_item_ptr->line_num + 1, start_col++, '<');
+                mvwaddch(win, menu_item_ptr->line_num + 1, start_col++, curletter);
+                mvwaddch(win, menu_item_ptr->line_num + 1, start_col++, '>');
                 curses_toggle_color_attr(win, HIGHLIGHT_COLOR, A_REVERSE, OFF);
             }
             else
             {
                 curses_toggle_color_attr(win, HIGHLIGHT_COLOR, NONE, ON);
-                mvwaddch(win, menu_item_ptr->line_num + 1, 2, curletter);
+                start_col++;
+                mvwaddch(win, menu_item_ptr->line_num + 1, start_col++, curletter);
                 curses_toggle_color_attr(win, HIGHLIGHT_COLOR, NONE, OFF);
-                mvwprintw(win, menu_item_ptr->line_num + 1, 3, ") ");
+                mvwaddch(win, menu_item_ptr->line_num + 1, start_col++, ')');
             }
+            start_col++;
         }
 #ifdef MENU_COLOR
 		if (iflags.use_menu_color && (menu_color = get_menu_coloring
@@ -1121,16 +1124,10 @@ static void menu_display_page(nhmenu *menu, WINDOW *win, int page_num)
     		}
 		}
 #endif /* MENU_COLOR */
-        curses_toggle_color_attr(win, NONE, menu_item_ptr->attr, ON);
-        entry_cols = menu->width;
-        start_col = 1;
 
-        if (menu_item_ptr->identifier.a_void != NULL)
-        {
-            entry_cols -= 4;
-            start_col += 4;
-        }        
-        
+        curses_toggle_color_attr(win, NONE, menu_item_ptr->attr, ON);
+        entry_cols = menu->width - (start_col - 1);
+
         num_lines = curses_num_lines(menu_item_ptr->str, entry_cols);
         
         for (count = 0; count < num_lines; count++)
